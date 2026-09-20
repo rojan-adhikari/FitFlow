@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitFlow</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <span id="toastMsg">Done</span>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-top">
+      <div>
+        <div class="modal-title" id="modalTitle">Workout</div>
+        <div class="modal-sub" id="modalSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay()">&#x2715;</button>
+    </div>
+    <div id="modalBody"></div>
+    <button class="btn-cta" onclick="launchWorkout()">Begin session</button>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ── Sidebar ────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="brand-name">Fit<span>Flow</span></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" onclick="showScreen('home',this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="showScreen('workouts',this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6.5 6.5h11v11h-11z"/><path d="M3 9.5h3.5M17.5 9.5H21M3 14.5h3.5M17.5 14.5H21"/></svg></span>
+        Workouts
+        <span class="nav-badge">8</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('challenges',this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+        Challenges
+      </div>
+
+      <div class="nav-section">Track</div>
+      <div class="nav-item" onclick="showScreen('nutrition',this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg></span>
+        Nutrition
+      </div>
+      <div class="nav-item" onclick="showScreen('health',this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65L12 21l8.42-8.77a5.4 5.4 0 0 0 0-7.65z"/></svg></span>
+        Health
+      </div>
+      <div class="nav-item" onclick="showScreen('ai',this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></span>
+        AI Coach
+        <span class="nav-badge" style="background:var(--purple)">New</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar" id="sidebarAvatar">RA</div>
+        <div class="user-info">
+          <div class="user-name">Rojan Adhikari</div>
+          <div class="user-meta">Level 7 &middot; 1,840 XP</div>
+        </div>
+        <button class="icon-btn" onclick="toggleTheme()" id="themeIconBtn" style="width:28px;height:28px">
+          <svg id="themeIconSvg" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="topbar-title" id="pageTitle">Dashboard</div>
+          <div class="topbar-sub" id="pageSub">Saturday, 19 September 2026</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-wrap">
+          <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input type="text" class="search-input" placeholder="Search workouts..." oninput="filterSearch(this.value)">
+        </div>
+        <button class="icon-btn" onclick="notify('No new notifications')">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <button class="theme-pill" id="themePill" onclick="toggleTheme()" title="Toggle theme">
+          <div class="theme-knob" id="themeKnob">
+            <svg id="themeKnobSvg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ════ DASHBOARD ════ -->
+      <div class="screen active" id="s-home">
+
+        <!-- Coach banner -->
+        <div class="coach-banner mb24">
+          <div class="coach-icon-wrap">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+          </div>
+          <div class="coach-body">
+            <div class="coach-label">AI Coach insight</div>
+            <div class="coach-text">Your resting heart rate dropped 4 bpm this week — a sign your cardiovascular fitness is improving. Recovery score is strong at 87%. A moderate HIIT session today would be optimal.</div>
+            <div class="coach-actions">
+              <button class="btn-sm" onclick="showScreen('ai', document.querySelector('.nav-item:nth-child(6)'))">Full analysis</button>
+              <button class="btn-sm" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)" onclick="notify('Rest day scheduled for tomorrow')">Schedule rest</button>
+            </div>
+          </div>
+          <div class="coach-score">
+            <div class="score-num">87</div>
+            <div class="score-label">Recovery %</div>
+          </div>
+        </div>
+
+        <!-- Streak -->
+        <div class="streak-bar mb20">
+          <div class="streak-count">12</div>
+          <div class="streak-info">
+            <div class="streak-title">Day streak</div>
+            <div class="streak-sub">Keep going — you're building a lasting habit</div>
+          </div>
+          <div class="streak-dots" id="streakDots"></div>
+          <div class="xp-tag">1,840 XP</div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid mb24" id="kpiGrid"></div>
+
+        <!-- Goals + chart -->
+        <div class="g31">
+          <div class="card">
+            <div class="sec-header">
+              <div class="sec-title">Daily goals</div>
+              <div class="sec-action">Edit targets</div>
+            </div>
+            <div id="goalBars"></div>
+          </div>
+          <div class="card">
+            <div class="sec-header">
+              <div class="sec-title">This week</div>
+              <div class="sec-action">Details</div>
+            </div>
+            <div class="bar-chart" id="weekChart"></div>
+            <div style="font-size:11.5px;color:var(--text-tertiary);margin-top:10px">Average 7,200 steps &middot; 5 of 7 days on target</div>
+          </div>
+        </div>
+
+        <!-- Quick workouts -->
+        <div class="card">
+          <div class="sec-header">
+            <div class="sec-title">Recommended today</div>
+            <div class="sec-action" onclick="showScreen('workouts', document.querySelectorAll('.nav-item')[1])">See all</div>
+          </div>
+          <div class="workout-list" id="homeWorkouts"></div>
+        </div>
+      </div>
+
+      <!-- ════ WORKOUTS ════ -->
+      <div class="screen" id="s-workouts">
+        <div class="filter-row" id="filterRow"></div>
+        <div class="workout-grid" id="workoutGrid"></div>
+      </div>
+
+      <!-- ════ CHALLENGES ════ -->
+      <div class="screen" id="s-challenges">
+        <div class="hero-challenge mb24">
+          <div class="hc-left">
+            <div class="hc-eyebrow">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+              Active challenge
+            </div>
+            <div class="hc-title">30-Day Fitness Surge</div>
+            <div class="hc-sub">Hit your daily goals for 30 consecutive days to earn 500 XP</div>
+            <div class="hc-prog-track"><div class="hc-prog-fill" style="width:40%"></div></div>
+            <div class="hc-prog-label">12 of 30 days complete &middot; 18 remaining</div>
+          </div>
+          <div class="hc-stat">
+            <div class="hc-big-num">12</div>
+            <div class="hc-big-label">days done</div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="card">
+            <div class="sec-header"><div class="sec-title">Weekly challenges</div></div>
+            <div class="challenge-list" id="challengeList"></div>
+          </div>
+          <div class="card">
+            <div class="sec-header"><div class="sec-title">College leaderboard</div></div>
+            <div class="lb-list" id="leaderboard"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-header"><div class="sec-title">Badges</div></div>
+          <div class="badges-grid" id="badges"></div>
+        </div>
+      </div>
+
+      <!-- ════ NUTRITION ════ -->
+      <div class="screen" id="s-nutrition">
+        <div class="kpi-grid mb24" id="nutKpi"></div>
+        <div class="g2">
+          <div class="card">
+            <div class="sec-header"><div class="sec-title">Water intake</div></div>
+            <p style="font-size:12px;color:var(--text-tertiary);margin-bottom:12px;margin-top:-8px">Tap a cup to log 250 ml</p>
+            <div class="water-grid" id="waterGrid"></div>
+            <div class="water-stat" id="waterStat">1.40 L &mdash; 2.50 L target</div>
+            <div style="display:flex;gap:10px;margin-top:14px">
+              <button class="pill-btn accent" onclick="addWater()">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add cup
+              </button>
+              <button class="pill-btn ghost" onclick="resetWater()">Reset</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec-header"><div class="sec-title">Macros today</div></div>
+            <div id="macros"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-header"><div class="sec-title">Meal log</div></div>
+          <div class="meal-list" id="mealLog"></div>
+          <button class="pill-btn accent" style="margin-top:16px" onclick="notify('Meal logging opens in the next update')">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Log meal
+          </button>
+        </div>
+      </div>
+
+      <!-- ════ HEALTH ════ -->
+      <div class="screen" id="s-health">
+        <div class="health-grid mb24" id="healthCards"></div>
+        <div class="g2">
+          <div class="card">
+            <div class="sec-header"><div class="sec-title">BMI</div></div>
+            <div class="bmi-labels"><span>Underweight &lt;18.5</span><span>Normal 18.5–24.9</span><span>Overweight 25+</span></div>
+            <div class="bmi-track">
+              <div class="bmi-seg" style="background:#9FE1CB"></div>
+              <div class="bmi-seg" style="background:#1D9E75"></div>
+              <div class="bmi-seg" style="background:#FAC775"></div>
+              <div class="bmi-seg" style="background:#D85A30"></div>
+            </div>
+            <div class="bmi-ptr">Your BMI: 22.4 &mdash; Normal range</div>
+            <div class="bmi-detail">Height 175 cm &middot; Weight 68.5 kg &middot; Age 20</div>
+          </div>
+          <div class="card">
+            <div class="sec-header"><div class="sec-title">Sleep this week</div></div>
+            <div class="bar-chart" id="sleepChart"></div>
+            <div style="font-size:11.5px;color:var(--text-tertiary);margin-top:10px">Average 7.2 h &middot; Recommended 7–9 h</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-header"><div class="sec-title">Activity log</div></div>
+          <div class="log-list" id="activityLog"></div>
+        </div>
+      </div>
+
+      <!-- ════ AI COACH ════ -->
+      <div class="screen" id="s-ai">
+        <div class="chat-shell">
+          <div class="chat-head">
+            <div class="chat-av">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            </div>
+            <div>
+              <div class="chat-av-name">FitFlow AI Coach</div>
+              <div class="chat-online">Active now</div>
+            </div>
+          </div>
+          <div class="chat-msgs" id="chatMsgs"></div>
+          <div class="chat-chips" id="chatChips"></div>
+          <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about your training..." onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="chat-send" onclick="sendMsg()">Send</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
